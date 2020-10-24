@@ -12,6 +12,10 @@
   }
 }
 
+.loader {
+  text-align: center;
+}
+
 .image-grid {
   display: flex;
   flex-wrap: wrap;
@@ -30,7 +34,7 @@
   width: 370px;
   height: 500px;
   opacity: 0.85;
-  transition: opacity 0.3s;
+  transition: opacity, skewX 0.3s;
 }
 
 .image-grid img:hover {

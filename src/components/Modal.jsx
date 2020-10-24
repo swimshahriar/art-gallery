@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BsFullscreen, BsFullscreenExit } from 'react-icons/bs';
 import { ImCancelCircle } from 'react-icons/im';
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
@@ -14,7 +14,6 @@ const Modal = ({
   modalArtChangeNegative,
 }) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [selectedArt, setSelectedArt] = useState(null);
 
   const openFullscreen = () => {
     const elem = document.getElementById('full-screen');
@@ -27,14 +26,25 @@ const Modal = ({
     setIsFullScreen(false);
   };
 
-  useEffect(() => {
-    setSelectedArt(art);
-    return () => {
-      setSelectedArt(null);
-    };
-  }, [art]);
+  const keyPressHandler = useCallback(
+    (event) => {
+      if (event.key === 'ArrowRight' && art.id !== max - 1) {
+        modalArtChangePositive(art.id);
+      } else if (event.key === 'ArrowLeft' && art.id > 0) {
+        modalArtChangeNegative(art.id);
+      }
+    },
+    [art.id, modalArtChangeNegative, modalArtChangePositive, max]
+  );
 
-  if (!selectedArt) {
+  useEffect(() => {
+    document.body.addEventListener('keydown', keyPressHandler);
+    return () => {
+      document.body.removeEventListener('keydown', keyPressHandler);
+    };
+  }, [keyPressHandler]);
+
+  if (!art) {
     return <h1>Loading</h1>;
   }
 
@@ -56,10 +66,11 @@ const Modal = ({
           </div>
         </div>
         <div className="modal-body">
-          {selectedArt.id > 0 && (
+          {art.id > 0 && (
             <div
+              id="slider-left"
               className="img-slider-icon"
-              onClick={() => modalArtChangeNegative(selectedArt.id)}
+              onClick={() => modalArtChangeNegative(art.id)}
             >
               <AiOutlineLeftCircle />
             </div>
@@ -68,19 +79,20 @@ const Modal = ({
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             src={`https://res.cloudinary.com/asynchronous-art-inc/image/upload/${art.imagePath}`}
-            alt={selectedArt.title}
+            alt={art.title}
           />
-          {selectedArt.id !== max - 1 && (
+          {art.id !== max - 1 && (
             <div
+              id="slider-right"
               className="img-slider-icon"
-              onClick={() => modalArtChangePositive(selectedArt.id)}
+              onClick={() => modalArtChangePositive(art.id)}
             >
               <AiOutlineRightCircle />
             </div>
           )}
         </div>
         <div className="modal-footer">
-          <p>{selectedArt.title}</p>
+          <p>{art.title}</p>
         </div>
       </div>
     </div>
