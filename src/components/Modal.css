@@ -40,6 +40,27 @@
 }
 
 .modal-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-body .img-slider-icon {
+  color: #fff;
+  font-size: 2.5rem;
+  margin: 1rem;
+}
+
+@media (max-width: 600px) {
+  .modal-body .img-slider-icon {
+    font-size: 2rem;
+    margin: 0.7rem;
+  }
+}
+
+.modal-body .img-slider-icon:hover {
+  cursor: pointer;
+  color: orange;
 }
 
 .modal-body img {

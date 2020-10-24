@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-import './App.css';
 import Modal from './components/Modal';
+import './App.css';
 
 const App = () => {
   const [responseData, setResponseData] = useState(null);
@@ -22,10 +22,33 @@ const App = () => {
     fetchData();
   }, []);
 
+  const modalArtChangePositive = (artId) => {
+    const filteredData = responseData.arts.filter(
+      (art, index) => index === artId + 1
+    );
+    setModalArt({ ...filteredData[0], id: artId + 1 });
+  };
+
+  const modalArtChangeNegative = (artId) => {
+    const filteredData = responseData.arts.filter(
+      (art, index) => index === artId - 1
+    );
+    setModalArt({ ...filteredData[0], id: artId - 1 });
+  };
+
   return (
     <>
-      {isOpen && <Modal art={modalArt} setIsOpen={setIsOpen} />}
-      <h1 className="header">Art Gallery App</h1>
+      {isOpen && (
+        <Modal
+          art={modalArt}
+          setIsOpen={setIsOpen}
+          modalArtChangePositive={modalArtChangePositive}
+          modalArtChangeNegative={modalArtChangeNegative}
+          max={responseData && responseData.arts.length}
+        />
+      )}
+
+      <h1 className="header">Art Gallery</h1>
       <div className="image-grid">
         {responseData &&
           responseData.arts.map((art, index) => (
@@ -36,7 +59,7 @@ const App = () => {
               src={`https://res.cloudinary.com/asynchronous-art-inc/image/upload/${art.imagePath}`}
               alt={art.title}
               onClick={() => {
-                setModalArt(art);
+                setModalArt({ ...art, id: index });
                 setIsOpen(true);
               }}
             />

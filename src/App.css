@@ -2,6 +2,14 @@
   text-align: center;
   margin: 2.5rem 0;
   font-size: 3.5rem;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .header {
+    font-size: 3rem;
+    margin: 2rem 0;
+  }
 }
 
 .image-grid {
